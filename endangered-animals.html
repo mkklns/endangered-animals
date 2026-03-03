@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Endangered Organisms</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #05080c;
+      --bg-soft: #0c1118;
+      --card: rgba(14, 22, 32, 0.85);
+      --text: #f0f6fc;
+      --muted: #8b9eb3;
+      --accent: #00e5a0;
+      --accent-2: #ff9f43;
+      --accent-3: #00d4ff;
+      --accent-4: #b388ff;
+      --shadow: 0 25px 70px rgba(0, 0, 0, 0.45);
+      --radius: 22px;
+      --glass: rgba(255, 255, 255, 0.05);
+      --glow-green: 0 0 60px rgba(0, 229, 160, 0.35);
+      --glow-blue: 0 0 60px rgba(0, 212, 255, 0.3);
+      --glow-orange: 0 0 50px rgba(255, 159, 67, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse 120% 80% at 20% 0%, rgba(0, 229, 160, 0.12), transparent 50%),
+        radial-gradient(ellipse 100% 60% at 80% 20%, rgba(0, 212, 255, 0.1), transparent 45%),
+        radial-gradient(ellipse 80% 50% at 50% 100%, rgba(179, 136, 255, 0.08), transparent 40%);
+      animation: bgShift 18s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes bgShift {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+
+    a {
+      color: var(--accent-3);
+      text-decoration: none;
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    a:hover { color: var(--accent); }
+
+    img {
+      max-width: 100%;
+      display: block;
+      border-radius: 16px;
+    }
+
+    .container {
+      width: min(1100px, 92vw);
+      margin: 0 auto;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(24px);
+      background: rgba(5, 8, 12, 0.8);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      transition: box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+
+    .nav.scrolled { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); }
+
+    .nav-cursor-glow {
+      position: absolute;
+      width: 320px;
+      height: 140px;
+      left: var(--nav-mx, -500px);
+      top: var(--nav-my, 50%);
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(0, 229, 160, 0.22), rgba(0, 212, 255, 0.12), transparent 65%);
+      pointer-events: none;
+      border-radius: 50%;
+      transition: opacity 0.25s ease, left 0.12s ease-out, top 0.12s ease-out;
+      z-index: 0;
+      opacity: 0;
+    }
+
+    .nav-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+    }
+
+    .nav-actions .btn {
+      transition: transform 0.2s ease, box-shadow 0.3s ease, border 0.2s ease;
+    }
+
+    .nav-title {
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      font-size: 1.05rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      position: relative;
+      overflow: hidden;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(0, 229, 160, 0.25), rgba(0, 212, 255, 0.2));
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.3s ease, border 0.2s ease;
+      box-shadow: 0 8px 30px rgba(0, 229, 160, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at var(--rx, 50%) var(--ry, 50%), rgba(255,255,255,0.25), transparent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: var(--glow-green);
+    }
+
+    .btn:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    .btn-ripple {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(255,255,255,0.35), transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: rippleOut 0.6s ease-out forwards;
+      transform: scale(0);
+    }
+
+    @keyframes rippleOut {
+      to {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover { box-shadow: 0 0 40px rgba(255, 255, 255, 0.15); }
+
+    .scroll-progress {
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-3), var(--accent-2));
+      width: 0;
+      transition: width 0.12s linear;
+      box-shadow: 0 0 20px rgba(0, 229, 160, 0.5);
+    }
+
+    .hero {
+      position: relative;
+      padding: 100px 0 80px;
+      overflow: hidden;
+      min-height: 55vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-bg-mesh {
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 15% 30%, rgba(0, 229, 160, 0.2), transparent 35%),
+        radial-gradient(circle at 85% 60%, rgba(0, 212, 255, 0.15), transparent 40%),
+        radial-gradient(circle at 50% 80%, rgba(255, 159, 67, 0.1), transparent 45%);
+      animation: meshMove 12s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    @keyframes meshMove {
+      0%, 100% { transform: scale(1) translate(0, 0); }
+      33% { transform: scale(1.05) translate(2%, -1%); }
+      66% { transform: scale(0.98) translate(-1%, 2%); }
+    }
+
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(40px);
+      touch-action: none;
+      opacity: 0.6;
+      cursor: grab;
+      user-select: none;
+      transition: filter 0.3s ease, opacity 0.3s ease;
+      z-index: 1;
+    }
+
+    .hero-orb:active { cursor: grabbing; }
+
+    .hero-orb:hover {
+      filter: blur(35px);
+      opacity: 0.8;
+    }
+
+    .hero-orb.o1 { width: 280px; height: 280px; background: rgba(0, 229, 160, 0.4); top: 10%; left: 5%; animation: orbFloat 10s ease-in-out infinite; }
+    .hero-orb.o2 { width: 200px; height: 200px; background: rgba(0, 212, 255, 0.35); top: 60%; right: 10%; animation: orbFloat 8s ease-in-out infinite 1s; }
+    .hero-orb.o3 { width: 160px; height: 160px; background: rgba(255, 159, 67, 0.3); bottom: 15%; left: 25%; animation: orbFloat 9s ease-in-out infinite 2s; }
+    .hero-orb.o4 { width: 120px; height: 120px; background: rgba(179, 136, 255, 0.25); top: 25%; right: 30%; animation: orbFloat 7s ease-in-out infinite 0.5s; }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(15px, -20px) scale(1.05); }
+      50% { transform: translate(-10px, 10px) scale(0.95); }
+      75% { transform: translate(20px, 15px) scale(1.02); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 22px;
+      max-width: 720px;
+      animation: heroIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      opacity: 0;
+      transform: translateY(40px) scale(0.96);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 4vw + 1.5rem, 3.8rem);
+      line-height: 1.12;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 0%, var(--muted) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--accent);
+      width: fit-content;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      animation: badgePulse 3s ease-in-out infinite;
+    }
+
+    @keyframes badgePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0, 229, 160, 0.2); }
+      50% { box-shadow: 0 0 25px 2px rgba(0, 229, 160, 0.15); }
+    }
+
+    .section {
+      padding: 70px 0;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      margin: 40px 0;
+      opacity: 0;
+      transform: scaleX(0);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .section-divider.reveal-visible {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+
+    .feature-card {
+      position: relative;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+      display: grid;
+      gap: 24px;
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease, border-color 0.3s ease;
+    }
+
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-3));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px) scale(1.005);
+      box-shadow: 0 40px 90px rgba(0, 0, 0, 0.5), var(--glow-green);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-card.crisis:hover { box-shadow: 0 40px 90px rgba(0, 0, 0, 0.5), var(--glow-orange); }
+    .feature-card.extinct:hover { box-shadow: 0 40px 90px rgba(0, 0, 0, 0.5), var(--glow-blue); }
+
+    .species-header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .species-title {
+      font-size: clamp(1.7rem, 2.2vw + 1rem, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover .species-title {
+      transform: translateX(4px);
+    }
+
+    .species-subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .info-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .info-card {
+      padding: 20px;
+      border-radius: 16px;
+      background: var(--glass);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      min-height: 150px;
+      cursor: pointer;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.3s ease, background 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .info-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at var(--card-x, 50%) var(--card-y, 50%), rgba(255,255,255,0.08), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .info-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      border-color: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .info-card.expanded {
+      min-height: auto;
+      grid-column: 1 / -1;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+      border-color: rgba(0, 229, 160, 0.3);
+    }
+
+    .info-card h4 {
+      margin-bottom: 10px;
+      font-size: 0.98rem;
+      color: var(--accent-2);
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-card h4::before {
+      content: "";
+      width: 4px;
+      height: 1em;
+      background: linear-gradient(180deg, var(--accent-2), var(--accent-3));
+      border-radius: 2px;
+    }
+
+    .info-card p {
+      color: var(--text);
+      font-size: 0.92rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .image-wrap {
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      transition: box-shadow 0.4s ease;
+    }
+
+    .feature-card:hover .image-wrap {
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+    }
+
+    .image-wrap img {
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .image-wrap:hover img {
+      transform: scale(1.04) rotate(1deg);
+    }
+
+    .comparison-bar-wrap {
+      margin: 56px 0;
+      padding: 32px 36px;
+      background: linear-gradient(145deg, rgba(14, 22, 32, 0.9), rgba(8, 14, 22, 0.95));
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 229, 160, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .comparison-bar-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 0%, rgba(0, 229, 160, 0.03) 50%, transparent 100%);
+      animation: comparisonShimmer 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes comparisonShimmer {
+      0%, 100% { opacity: 0; transform: translateX(-100%); }
+      50% { opacity: 1; transform: translateX(100%); }
+    }
+
+    .comparison-bar-wrap h3 {
+      margin-bottom: 20px;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .comparison-track-wrap {
+      position: relative;
+      padding: 20px 0;
+    }
+
+    .comparison-track {
+      height: 16px;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 999px;
+      overflow: visible;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .comparison-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.15s ease-out;
+      background: linear-gradient(90deg, var(--accent), var(--accent-3), var(--accent-2));
+      background-size: 200% 100%;
+      animation: comparisonGradient 3s ease infinite;
+      box-shadow: 0 0 30px rgba(0, 229, 160, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      position: relative;
+    }
+
+    .comparison-fill::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 24px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 229, 160, 0.4));
+      border-radius: 0 999px 999px 0;
+      pointer-events: none;
+    }
+
+    .comparison-fill::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+      animation: comparisonShine 2s ease-in-out infinite;
+    }
+
+    @keyframes comparisonGradient {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes comparisonShine {
+      0%, 100% { opacity: 0; transform: translateX(-50%); }
+      50% { opacity: 1; transform: translateX(50%); }
+    }
+
+    .comparison-slider-input {
+      position: absolute;
+      width: 100%;
+      height: 40px;
+      top: 50%;
+      left: 0;
+      margin-top: -20px;
+      transform: translateY(-10px);
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .comparison-slider-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #fff, #e0e8f0);
+      box-shadow: 0 0 0 3px rgba(0, 229, 160, 0.6), 0 4px 20px rgba(0, 229, 160, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+      cursor: grab;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .comparison-slider-input::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 0 4px rgba(0, 229, 160, 0.5), 0 0 40px rgba(0, 229, 160, 0.5), 0 4px 20px rgba(0, 229, 160, 0.4);
+    }
+
+    .comparison-slider-input::-webkit-slider-thumb:active {
+      cursor: grabbing;
+      transform: scale(1.05);
+    }
+
+    .comparison-slider-input::-moz-range-thumb {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(145deg, #fff, #e0e8f0);
+      box-shadow: 0 0 0 3px rgba(0, 229, 160, 0.6), 0 4px 20px rgba(0, 229, 160, 0.4);
+      cursor: grab;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .comparison-slider-input::-moz-range-thumb:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 0 4px rgba(0, 229, 160, 0.5), 0 0 40px rgba(0, 229, 160, 0.5);
+    }
+
+    .comparison-slider-input::-webkit-slider-runnable-track {
+      height: 0;
+      border: none;
+    }
+
+    .comparison-slider-input::-moz-range-track {
+      height: 0;
+      border: none;
+      background: transparent;
+    }
+
+    .comparison-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 18px;
+      gap: 12px;
+    }
+
+    .comparison-label {
+      font-size: 0.88rem;
+      color: var(--muted);
+      padding: 8px 12px;
+      border-radius: 12px;
+      transition: color 0.35s ease, background 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .comparison-label.active {
+      color: var(--accent);
+      background: rgba(0, 229, 160, 0.12);
+      box-shadow: 0 0 20px rgba(0, 229, 160, 0.2);
+      transform: scale(1.02);
+    }
+
+    .comparison-hint {
+      margin-top: 16px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--accent);
+      min-height: 1.6em;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      text-align: center;
+    }
+
+    .comparison-hint.animate {
+      animation: comparisonHintPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes comparisonHintPop {
+      0% { transform: scale(0.95); opacity: 0.7; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .references {
+      background: linear-gradient(145deg, rgba(14, 22, 32, 0.9), rgba(8, 14, 22, 0.95));
+      border-radius: var(--radius);
+      padding: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .references h2 {
+      margin-bottom: 16px;
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .references ul {
+      list-style: none;
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .references li {
+      font-size: 0.9rem;
+      color: var(--muted);
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      transition: color 0.2s ease, padding-left 0.2s ease;
+    }
+
+    .references li:hover {
+      color: var(--text);
+      padding-left: 8px;
+    }
+
+    .footer {
+      padding: 50px 0 80px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.88rem;
+      position: relative;
+    }
+
+    .footer::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px) scale(0.98);
+      filter: blur(8px);
+      transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.9s ease;
+    }
+
+    .reveal.reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal.reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal.reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal.reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal.reveal-delay-5 { transition-delay: 0.5s; }
+
+    .reveal-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 5, 10, 0.85);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .modal.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-content {
+      background: linear-gradient(160deg, #0d1420, #080d14);
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 720px;
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 50px 120px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 229, 160, 0.1);
+      animation: modalIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-header h3 {
+      font-size: 1.4rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .close-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      width: 40px;
+      height: 40px;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.1);
+    }
+
+    .modal-body ul {
+      margin: 14px 0 0 20px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    @keyframes heroIn {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-18px); }
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(30px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .cursor-glow {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 229, 160, 0.12), transparent 70%);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.2s ease;
+    }
+
+    @media (max-width: 720px) {
+      .nav-inner { flex-direction: column; gap: 12px; }
+      .hero { padding: 70px 0 50px; min-height: auto; }
+      .hero-orb { display: none; }
+      .feature-card { padding: 24px; }
+      .info-card.expanded { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav" id="mainNav">
+    <div class="nav-cursor-glow" id="navCursorGlow" aria-hidden="true"></div>
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="container nav-inner">
+      <div class="nav-title">Endangered Organisms</div>
+      <div class="nav-actions">
+        <button class="btn nav-btn" id="openAiLog">AI Log</button>
+        <a class="btn btn-secondary nav-btn" href="#references">Jump to References</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-bg-mesh"></div>
+    <div class="hero-orb o1" data-draggable title="Drag me!"></div>
+    <div class="hero-orb o2" data-draggable title="Drag me!"></div>
+    <div class="hero-orb o3" data-draggable title="Drag me!"></div>
+    <div class="hero-orb o4" data-draggable title="Drag me!"></div>
+    <div class="container">
+      <div class="hero-content">
+        <span class="badge">Endangered Organisms</span>
+        <h1>Three species, three stories: recovery, crisis, and extinction.</h1>
+        <p>
+          I picked one success story, one current crisis, and one extinct species. The facts come from real sources,
+          and the goal is simple: learn the science and care about the future.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="container">
+      <div class="comparison-bar-wrap reveal">
+        <h3>Drag the slider: how threatened is each species?</h3>
+        <div class="comparison-track-wrap">
+          <div class="comparison-track">
+            <div class="comparison-fill" id="comparisonFill" style="width: 33%"></div>
+          </div>
+          <input type="range" class="comparison-slider-input" id="comparisonSlider" min="0" max="100" value="33" aria-label="Threat level slider">
+        </div>
+        <div class="comparison-labels">
+          <span class="comparison-label" id="comparisonLabel0">Bald Eagle (recovered)</span>
+          <span class="comparison-label" id="comparisonLabel1">Vaquita (crisis)</span>
+          <span class="comparison-label" id="comparisonLabel2">Passenger Pigeon (extinct)</span>
+        </div>
+        <p class="comparison-hint" id="comparisonHint">Threat level: between recovered and crisis</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="container">
+      <div class="feature-card">
+        <span class="badge" style="color: var(--accent);">Success Story</span>
+        <div class="species-header">
+          <h2 class="species-title">Bald Eagle <span class="species-subtitle">(Haliaeetus leucocephalus)</span></h2>
+          <p class="species-subtitle">USA • Recovered due to strong conservation</p>
+        </div>
+        <div class="image-wrap">
+          <img src="https://www.fws.gov/sites/default/files/2021-08/bald%20eagle%20with%20fish.jpg" alt="Bald eagle with fish (Success Story)" class="tilt" />
+        </div>
+        <div class="info-grid">
+          <div class="info-card reveal reveal-delay-1" data-expandable>
+            <h4>Species Details</h4>
+            <p>
+              Common name: Bald eagle. Scientific name: Haliaeetus leucocephalus. It lives near lakes, rivers,
+              and coasts across the USA. The population is estimated at over 300,000 individuals.
+            </p>
+          </div>
+          <div class="info-card reveal reveal-delay-2" data-expandable>
+            <h4>Trend & Status</h4>
+            <p>
+              Trend: increasing. Conservation status: IUCN Least Concern. It used to be endangered in the U.S.
+              but was removed from the list in 2007 because numbers recovered.
+            </p>
+          </div>
+          <div class="info-card reveal reveal-delay-3" data-expandable>
+            <h4>Analysis</h4>
+            <p>
+              Main threats were pesticides like DDT, habitat loss, and hunting. Eagles are top predators and
+              scavengers, so they help balance the food web and keep ecosystems healthy.
+            </p>
+          </div>
+          <div class="info-card reveal reveal-delay-4" data-expandable>
+            <h4>Human Impact</h4>
+            <p>
+              Humans helped by banning DDT, protecting nesting areas, and passing the Bald and Golden Eagle
+              Protection Act. Conservation and clean water programs made a big difference.
+            </p>
+          </div>
+          <div class="info-card reveal reveal-delay-5" data-expandable>
+            <h4>Future / Lessons</h4>
+            <p>
+              Possible future threats include lead poisoning from fishing tackle, habitat loss, and climate change.
+              The lesson is that strong conservation laws can actually bring species back.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider reveal"></div>
+
+  <section class="section reveal">
+    <div class="container">
+      <div class="feature-card crisis">
+        <span class="badge" style="color: var(--accent-2);">Current Crisis</span>
+        <div class="species-header">
+          <h2 class="species-title">Vaquita <span class="species-subtitle">(Phocoena sinus)</span></h2>
+          <p class="species-subtitle">Gulf of California, Mexico • Critically endangered</p>
+        </div>
+        <div class="image-wrap">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/65/Vaquita4_Olson_NOAA.jpg" alt="Vaquita at the surface (Current Crisis)" class="tilt" />
+        </div>
+        <div class="info-grid">
+          <div class="info-card reveal reveal-delay-1" data-expandable>
+            <h4>Species Details</h4>
+            <p>
+              Common name: Vaquita. Scientific name: Phocoena sinus. It only lives in the northern Gulf of
+              California. Population size is extremely small, around 10 or fewer individuals.
+            </p>
+          </div>
+          <div class="info-card reveal reveal-delay-2" data-expandable>
+            <h4>Trend & Status</h4>
+            <p>
+              Trend: decreasing fast. Conservation status: Critically Endangered (IUCN). It is the most endangered
+              marine mammal in the world.
+            </p>
+          </div>
+          <div class="info-card reveal reveal-delay-3" data-expandable>
+            <h4>Analysis</h4>
+            <p>
+              The main threat is gillnet fishing, especially illegal nets for totoaba. Vaquitas are part of the
+              marine food web and show the health of the ecosystem and biodiversity.
+            </p>
+          </div>
+          <div class="info-card reveal reveal-delay-4" data-expandable>
+            <h4>Human Impact</h4>
+            <p>
+              Humans cause the crisis because gillnets trap vaquitas as bycatch. If vaquitas disappear, the food web
+              loses a species and it shows the ecosystem is being damaged.
+            </p>
+          </div>
+          <div class="info-card reveal reveal-delay-5" data-expandable>
+            <h4>Future / Lessons</h4>
+            <p>
+              People can help by enforcing gillnet bans, using safe fishing gear, and supporting local communities
+              to fish sustainably. It’s shocking how quickly a species can vanish.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider reveal"></div>
+
+  <section class="section reveal">
+    <div class="container">
+      <div class="feature-card extinct">
+        <span class="badge" style="color: var(--accent-3);">Extinct</span>
+        <div class="species-header">
+          <h2 class="species-title">Passenger Pigeon <span class="species-subtitle">(Ectopistes migratorius)</span></h2>
+          <p class="species-subtitle">North America • Extinct in 1914</p>
+        </div>
+        <div class="image-wrap">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/f/f4/Ectopistes_migratorius%28s.XVIII%29.jpg" alt="Passenger pigeon illustration (Ectopistes migratorius) by John James Audubon" class="tilt" />
+        </div>
+        <div class="info-grid">
+          <div class="info-card reveal reveal-delay-1" data-expandable>
+            <h4>Species Details</h4>
+            <p>
+              Common name: Passenger pigeon. Scientific name: Ectopistes migratorius. It lived across North America.
+              Population size was once in the billions, but dropped to zero. The last bird, “Martha,” died in 1914.
+            </p>
+          </div>
+          <div class="info-card reveal reveal-delay-2" data-expandable>
+            <h4>Trend & Status</h4>
+            <p>
+              Trend: extinct. Conservation status: Extinct (IUCN). The species disappeared completely from the wild,
+              and the last captive bird died in 1914.
+            </p>
+          </div>
+          <div class="info-card reveal reveal-delay-3" data-expandable>
+            <h4>Analysis</h4>
+            <p>
+              Main causes were huge commercial hunting and habitat loss from deforestation. The pigeons helped with
+              seed dispersal and shaped forest ecosystems, so their loss affected biodiversity.
+            </p>
+          </div>
+          <div class="info-card reveal reveal-delay-4" data-expandable>
+            <h4>Human Impact</h4>
+            <p>
+              Humans overhunted them for food and destroyed nesting forests. This is a clear example of how fast a
+              species can be wiped out when there are no limits or protection.
+            </p>
+          </div>
+          <div class="info-card reveal reveal-delay-5" data-expandable>
+            <h4>Future / Lessons</h4>
+            <p>
+              The lesson is to protect habitat early and control hunting before a species collapses. One thing I
+              learned is that “common” animals can still go extinct.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="references">
+    <div class="container">
+      <div class="references reveal">
+        <h2>References & Image Credits</h2>
+        <ul>
+          <li>IUCN Red List (general): https://www.iucnredlist.org</li>
+          <li>Bald eagle IUCN page: https://www.iucnredlist.org/species/22695144/93492222</li>
+          <li>Vaquita IUCN page: https://www.iucnredlist.org/species/17028/50370296</li>
+          <li>Passenger pigeon IUCN page: https://www.iucnredlist.org/species/22699015/93751742</li>
+          <li>NOAA Fisheries – Vaquita: https://www.fisheries.noaa.gov/species/vaquita/conservation-management</li>
+          <li>USFWS – Bald eagle species: https://www.fws.gov/species/bald-eagle-haliaeetus-leucocephalus</li>
+          <li>USFWS – Passenger pigeon species: https://www.fws.gov/species/passenger-pigeon-ectopistes-migratorius</li>
+          <li>BirdLife Data Zone – Passenger pigeon: https://datazone.birdlife.org/species/factsheet/passenger-pigeon-ectopistes-migratorius</li>
+          <li>
+            Image: “Bald eagle with fish” • Credit: USFWS • Source: FWS.gov
+            • URL: https://www.fws.gov/sites/default/files/2021-08/bald%20eagle%20with%20fish.jpg • License: Public Domain
+          </li>
+          <li>
+            Image: “Vaquita at the surface” • Credit: Paula Olson/NOAA Fisheries • Source: Wikimedia Commons (NOAA original)
+            • URL: https://upload.wikimedia.org/wikipedia/commons/6/65/Vaquita4_Olson_NOAA.jpg • License: Public Domain (US Gov)
+          </li>
+          <li>
+            Passenger pigeon illustration (Ectopistes migratorius) • John James Audubon • Source: Wikimedia Commons
+            • License: Public Domain • https://upload.wikimedia.org/wikipedia/commons/f/f4/Ectopistes_migratorius%28s.XVIII%29.jpg
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    Made for Year 8 Science • Endangered Organisms Project
+  </footer>
+
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+  <div class="modal" id="aiLogModal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="aiLogTitle">
+      <div class="modal-header">
+        <h3 id="aiLogTitle">AI Log</h3>
+        <button class="close-btn" id="closeAiLog" aria-label="Close AI Log">×</button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Most of the writing is my own. I used the research areas from the task sheet and then wrote the sentences
+          in my own words. This site is not on google sites, because i wanted this site.
+to look really cool        </p>
+        <ul>
+          <li><strong>AI help:</strong> I asked AI for a clean site layout, color ideas, and to check grammar.</li>
+          <li><strong>My research:</strong> I found facts on IUCN Red List, NOAA Fisheries, USFWS, and BirdLife.</li>
+          <li><strong>Images:</strong> I chose public domain images from USFWS and NOAA sources and credited each one.</li>
+          <li><strong>My edits:</strong> I rewrote sentences to sound more natural, removed extra words, and added my own reflections.</li>
+          <li><strong>Version history:</strong> Draft 1 → Edited wording → Added references → Final check.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const revealEls = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('reveal-visible');
+            }
+          });
+        },
+        { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+      );
+      revealEls.forEach((el) => observer.observe(el));
+
+      const nav = document.getElementById('mainNav');
+      const navCursorGlow = document.getElementById('navCursorGlow');
+      if (nav) {
+        window.addEventListener('scroll', () => {
+          nav.classList.toggle('scrolled', window.scrollY > 50);
+        });
+        nav.addEventListener('mousemove', (e) => {
+          const rect = nav.getBoundingClientRect();
+          nav.style.setProperty('--nav-mx', (e.clientX - rect.left) + 'px');
+          nav.style.setProperty('--nav-my', (e.clientY - rect.top) + 'px');
+          if (navCursorGlow) navCursorGlow.style.opacity = '1';
+          const btns = nav.querySelectorAll('.nav-btn');
+          btns.forEach((btn) => {
+            const br = btn.getBoundingClientRect();
+            const cx = br.left + br.width / 2;
+            const cy = br.top + br.height / 2;
+            const dx = e.clientX - cx;
+            const dy = e.clientY - cy;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const pull = Math.max(0, 1 - dist / 120) * 6;
+            const angle = Math.atan2(dy, dx);
+            const mx = Math.cos(angle) * pull;
+            const my = Math.sin(angle) * pull;
+            btn.style.transform = `translate(${mx}px, ${my}px)`;
+          });
+        });
+        nav.addEventListener('mouseleave', () => {
+          nav.style.setProperty('--nav-mx', '-500px');
+          if (navCursorGlow) navCursorGlow.style.opacity = '0';
+          nav.querySelectorAll('.nav-btn').forEach((btn) => {
+            btn.style.transform = '';
+          });
+        });
+      }
+
+      const progress = document.getElementById('scrollProgress');
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        progress.style.width = docHeight > 0 ? (scrollTop / docHeight) * 100 + '%' : '0%';
+      });
+
+      const aiLogModal = document.getElementById('aiLogModal');
+      const openAiLog = document.getElementById('openAiLog');
+      const closeAiLog = document.getElementById('closeAiLog');
+      const openModal = () => {
+        aiLogModal.classList.add('active');
+        aiLogModal.setAttribute('aria-hidden', 'false');
+      };
+      const closeModal = () => {
+        aiLogModal.classList.remove('active');
+        aiLogModal.setAttribute('aria-hidden', 'true');
+      };
+      openAiLog.addEventListener('click', openModal);
+      closeAiLog.addEventListener('click', closeModal);
+      aiLogModal.addEventListener('click', (e) => { if (e.target === aiLogModal) closeModal(); });
+      window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+      document.querySelectorAll('.btn').forEach((btn) => {
+        btn.addEventListener('click', function(e) {
+          const rect = this.getBoundingClientRect();
+          const ripple = document.createElement('span');
+          ripple.className = 'btn-ripple';
+          ripple.style.left = (e.clientX - rect.left - 60) + 'px';
+          ripple.style.top = (e.clientY - rect.top - 60) + 'px';
+          this.appendChild(ripple);
+          setTimeout(() => ripple.remove(), 600);
+        });
+      });
+
+      document.querySelectorAll('.info-card[data-expandable]').forEach((card) => {
+        card.addEventListener('click', function(e) {
+          if (e.target.tagName === 'A') return;
+          this.classList.toggle('expanded');
+        });
+        card.addEventListener('mousemove', function(e) {
+          const rect = this.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width) * 100;
+          const y = ((e.clientY - rect.top) / rect.height) * 100;
+          this.style.setProperty('--card-x', x + '%');
+          this.style.setProperty('--card-y', y + '%');
+        });
+      });
+
+      const comparisonSlider = document.getElementById('comparisonSlider');
+      const comparisonFill = document.getElementById('comparisonFill');
+      const comparisonHint = document.getElementById('comparisonHint');
+      const comparisonLabels = [
+        document.getElementById('comparisonLabel0'),
+        document.getElementById('comparisonLabel1'),
+        document.getElementById('comparisonLabel2')
+      ];
+      const hints = [
+        'Bald Eagle: recovered (least threatened)',
+        'Between Bald Eagle and Vaquita',
+        'Vaquita: critically endangered',
+        'Between Vaquita and Passenger Pigeon',
+        'Passenger Pigeon: extinct (most threatened)'
+      ];
+      if (comparisonSlider && comparisonFill) {
+        function updateComparison() {
+          const v = +comparisonSlider.value;
+          comparisonFill.style.width = v + '%';
+          comparisonLabels.forEach((el, i) => {
+            if (!el) return;
+            const active = (i === 0 && v < 35) || (i === 1 && v >= 35 && v < 70) || (i === 2 && v >= 70);
+            el.classList.toggle('active', active);
+          });
+          if (comparisonHint) {
+            if (v < 20) comparisonHint.textContent = hints[0];
+            else if (v < 40) comparisonHint.textContent = hints[1];
+            else if (v < 60) comparisonHint.textContent = hints[2];
+            else if (v < 80) comparisonHint.textContent = hints[3];
+            else comparisonHint.textContent = hints[4];
+            comparisonHint.classList.remove('animate');
+            comparisonHint.offsetHeight;
+            comparisonHint.classList.add('animate');
+          }
+        }
+        comparisonSlider.addEventListener('input', updateComparison);
+        updateComparison();
+      }
+
+      const tiltImages = document.querySelectorAll('.tilt');
+      tiltImages.forEach((img) => {
+        img.addEventListener('mousemove', (e) => {
+          const rect = img.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
+          const y = ((e.clientY - rect.top) / rect.height - 0.5) * -10;
+          img.style.transform = `perspective(800px) rotateX(${y}deg) rotateY(${x}deg) scale(1.03)`;
+        });
+        img.addEventListener('mouseleave', () => {
+          img.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)';
+        });
+      });
+
+      const orbs = document.querySelectorAll('[data-draggable]');
+      orbs.forEach((orb) => {
+        let isDown = false;
+        let startX, startY, startLeft, startTop;
+        orb.addEventListener('mousedown', (e) => {
+          if (e.button !== 0) return;
+          e.preventDefault();
+          isDown = true;
+          startX = e.clientX;
+          startY = e.clientY;
+          startLeft = orb.offsetLeft;
+          startTop = orb.offsetTop;
+          orb.style.animation = 'none';
+          orb.style.left = startLeft + 'px';
+          orb.style.top = startTop + 'px';
+        });
+        window.addEventListener('mousemove', (e) => {
+          if (!isDown) return;
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          startLeft += dx;
+          startTop += dy;
+          startX = e.clientX;
+          startY = e.clientY;
+          orb.style.left = startLeft + 'px';
+          orb.style.top = startTop + 'px';
+        });
+        window.addEventListener('mouseup', () => {
+          if (isDown) {
+            isDown = false;
+            orb.style.animation = '';
+          }
+        });
+      });
+
+      const cursorGlow = document.getElementById('cursorGlow');
+      if (cursorGlow && window.matchMedia('(pointer: fine)').matches) {
+        let raf = 0;
+        let x = 0, y = 0;
+        document.addEventListener('mousemove', (e) => {
+          x = e.clientX;
+          y = e.clientY;
+        });
+        function updateGlow() {
+          cursorGlow.style.left = x + 'px';
+          cursorGlow.style.top = y + 'px';
+          raf = requestAnimationFrame(updateGlow);
+        }
+        updateGlow();
+      } else if (cursorGlow) {
+        cursorGlow.style.display = 'none';
+      }
+    })();
+  </script>
+</body>
+</html>
